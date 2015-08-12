@@ -34,7 +34,10 @@ export default class DateTimeField extends Component {
     onChange: PropTypes.func,
     format: PropTypes.string,
     inputProps: PropTypes.object,
+    thetop: React.PropTypes.number.isRequired,
+    theright: React.PropTypes.number.isRequired,
     inputFormat: PropTypes.string,
+	customIcon: PropTypes.node,
     defaultText: PropTypes.string,
     mode: PropTypes.oneOf([Constants.MODE_DATE, Constants.MODE_DATETIME, Constants.MODE_TIME]),
     minDate: PropTypes.object,
@@ -53,8 +56,8 @@ export default class DateTimeField extends Component {
       widgetStyle: {
         display: "block",
         position: "absolute",
-        left: -9999,
-        zIndex: "9999 !important"
+        left: -9999
+
       },
       viewDate: moment(this.props.dateTime, this.props.format, true).startOf("month"),
       selectedDate: moment(this.props.dateTime, this.props.format, true),
@@ -110,10 +113,11 @@ export default class DateTimeField extends Component {
         selectedDate: this.state.viewDate.clone().month(month).date(parseInt(e.target.innerHTML)).hour(this.state.selectedDate.hours()).minute(this.state.selectedDate.minutes())
       }, function() {
         this.closePicker();
-        this.props.onChange(this.state.selectedDate.format(this.props.format));
-        return this.setState({
+        //this.props.onChange(this.state.selectedDate.format(this.props.format));
+        this.setState({
           inputValue: this.state.selectedDate.format(this.state.inputFormat)
         });
+		return this.props.onChange(this.state.selectedDate.format(this.props.format));
       });
     }
   }
@@ -275,7 +279,7 @@ export default class DateTimeField extends Component {
         classes.bottom = false;
         classes["pull-right"] = true;
       } else {
-        offset.top = 40;
+        offset.top =  parseInt(this.props.thetop);;
         classes.top = false;
         classes.bottom = true;
         classes["pull-right"] = true;
@@ -285,7 +289,7 @@ export default class DateTimeField extends Component {
         position: "absolute",
         top: offset.top,
         left: "auto",
-        right: 40
+        right: parseInt(this.props.theright)
       };
       return this.setState({
         widgetStyle: styles,
@@ -321,6 +325,13 @@ export default class DateTimeField extends Component {
   }
 
   render() {
+	  var icon;
+	  if (this.props.hasOwnProperty("customIcon")) {
+		  icon = this.props.customIcon;
+	  } else {
+	  	icon =  <Glyphicon glyph={this.state.buttonIcon} />
+	  }
+	  
     return (
           <div>
             {this.renderOverlay()}
@@ -356,8 +367,8 @@ export default class DateTimeField extends Component {
                   widgetStyle={this.state.widgetStyle}
             />
             <div className="input-group date" ref="datetimepicker">
-              <input type="text" className="form-control" onChange={this.onChange} value={this.state.inputValue} {...this.props.inputProps}/>
-              <span className="input-group-addon" onClick={this.onClick} onBlur={this.onBlur} ref="dtpbutton"><Glyphicon glyph={this.state.buttonIcon} /></span>
+              <input type="text" className="form-control" id={this.props.id} onChange={this.onChange} value={this.state.inputValue} {...this.props.inputProps}/>
+              <span className="input-group-addon" onClick={this.onClick} onBlur={this.onBlur} ref="dtpbutton">{icon}</span>
             </div>
           </div>
     );
