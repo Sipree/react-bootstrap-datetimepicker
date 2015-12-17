@@ -415,12 +415,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(DateTimeField, [{
 	    key: "render",
 	    value: function render() {
-	      var icon;
-	      if (this.props.hasOwnProperty("customIcon")) {
-	        icon = this.props.customIcon;
-	      } else {
-	        icon = _react2["default"].createElement(Glyphicon, { glyph: this.state.buttonIcon });
-	      }
 
 	      return _react2["default"].createElement(
 	        "div",

@@ -342,12 +342,6 @@ export default class DateTimeField extends Component {
   }
 
   render() {
-	  var icon;
-	  if (this.props.hasOwnProperty("customIcon")) {
-		  icon = this.props.customIcon;
-	  } else {
-	  	icon =  <Glyphicon glyph={this.state.buttonIcon} />
-	  }
 	  
     return (
           <div>
