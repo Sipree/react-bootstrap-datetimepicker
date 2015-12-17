@@ -410,6 +410,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return _react2["default"].createElement("span", null);
 	      }
 	    };
+
+	    this.renderIcon = function () {
+	      if (_this.props.hasOwnProperty('calendarIconSrc') && _this.props.calendarIconSrc !== "") {
+	        return _react2["default"].createElement("img", { src: _this.props.calendarIconSrc });
+	      } else {
+	        return _react2["default"].createElement("span", { className: (0, _classnames2["default"])("glyphicon", _this.state.buttonIcon) });
+	      }
+	    };
 	  }
 
 	  _createClass(DateTimeField, [{
@@ -460,7 +468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          _react2["default"].createElement(
 	            "span",
 	            { className: "input-group-addon", onBlur: this.onBlur, onClick: this.onClick, ref: "dtpbutton" },
-	            _react2["default"].createElement("span", { className: (0, _classnames2["default"])("glyphicon", this.state.buttonIcon) })
+	            this.renderIcon()
 	          )
 	        )
 	      );

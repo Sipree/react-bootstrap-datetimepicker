@@ -341,6 +341,15 @@ export default class DateTimeField extends Component {
     }
   }
 
+  renderIcon = () => {
+    if(this.props.hasOwnProperty('calendarIconSrc') && this.props.calendarIconSrc !== "") {
+      return (<img src={this.props.calendarIconSrc}/>);
+    } else {
+      return (<span className={classnames("glyphicon", this.state.buttonIcon)}/>);
+    }
+
+  }
+
   render() {
 	  
     return (
@@ -382,7 +391,7 @@ export default class DateTimeField extends Component {
             <div className={"input-group date " + this.size()} ref="datetimepicker">
               <input className="form-control" onChange={this.onChange} type="text" value={this.state.inputValue} {...this.props.inputProps}/>
               <span className="input-group-addon" onBlur={this.onBlur} onClick={this.onClick} ref="dtpbutton">
-                <span className={classnames("glyphicon", this.state.buttonIcon)} />
+                {this.renderIcon()}
               </span>
             </div>
           </div>
