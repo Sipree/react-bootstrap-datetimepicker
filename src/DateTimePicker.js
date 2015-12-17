@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import { Glyphicon } from "react-bootstrap";
 import classnames from "classnames";
 import DateTimePickerDate from "./DateTimePickerDate.js";
 import DateTimePickerTime from "./DateTimePickerTime.js";
@@ -9,6 +8,7 @@ export default class DateTimePicker extends Component {
   static propTypes = {
     showDatePicker: PropTypes.bool,
     showTimePicker: PropTypes.bool,
+    calendarIconSrc: PropTypes.string,
     subtractMonth: PropTypes.func.isRequired,
     addMonth: PropTypes.func.isRequired,
     viewDate: PropTypes.object.isRequired,
@@ -89,11 +89,19 @@ export default class DateTimePicker extends Component {
     }
   }
 
+  renderIcon = () => {
+      if(this.props.hasOwnProperty('calendarIconSrc') && this.props.calendarIconSrc !== "") {
+        return (<img src={this.props.calendarIconSrc}/>);
+      } else {
+        return (<span className={classnames("glyphicon", this.props.showTimePicker ? "glyphicon-calendar" : "glyphicon-time")} />)
+      }
+  }
+
   renderSwitchButton = () => {
       return this.props.mode === Constants.MODE_DATETIME ?
           (
               <li>
-                <span className="btn picker-switch" style={{width: "100%"}} onClick={this.props.togglePicker}><Glyphicon glyph={this.props.showTimePicker ? "calendar" : "time"} /></span>
+                <span className="btn picker-switch" onClick={this.props.togglePicker} style={{width: "100%"}} >{this.renderIcon()}</span>
               </li>
           ) :
           null;

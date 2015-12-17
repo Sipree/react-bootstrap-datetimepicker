@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import moment from "moment";
-import { Glyphicon } from "react-bootstrap";
+import classnames from "classnames";
 import DateTimePicker from "./DateTimePicker.js";
 import Constants from "./Constants.js";
 
@@ -11,6 +11,8 @@ export default class DateTimeField extends Component {
     showToday: true,
     viewMode: "days",
     daysOfWeekDisabled: [],
+    calendarIconSrc: "",
+    size: Constants.SIZE_MEDIUM,
     mode: Constants.MODE_DATETIME,
     onChange: (x) => {
       console.log(x);
@@ -30,7 +32,10 @@ export default class DateTimeField extends Component {
   }
 
   static propTypes = {
-    dateTime: PropTypes.string,
+    dateTime: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ]),
     onChange: PropTypes.func,
     format: PropTypes.string,
     inputProps: PropTypes.object,
@@ -45,14 +50,15 @@ export default class DateTimeField extends Component {
     direction: PropTypes.string,
     showToday: PropTypes.bool,
     viewMode: PropTypes.string,
-    daysOfWeekDisabled: PropTypes.arrayOf(PropTypes.integer)
+    size: PropTypes.oneOf([Constants.SIZE_SMALL, Constants.SIZE_MEDIUM, Constants.SIZE_LARGE]),
+    daysOfWeekDisabled: PropTypes.arrayOf(PropTypes.number)
   }
 
   state = {
       showDatePicker: this.props.mode !== Constants.MODE_TIME,
       showTimePicker: this.props.mode === Constants.MODE_TIME,
       inputFormat: this.resolvePropsInputFormat(),
-      buttonIcon: this.props.mode === Constants.MODE_TIME ? "time" : "calendar",
+      buttonIcon: this.props.mode === Constants.MODE_TIME ? "glyphicon-time" : "glyphicon-calendar",
       widgetStyle: {
         display: "block",
         position: "absolute",
@@ -65,18 +71,18 @@ export default class DateTimeField extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    if (moment(nextProps.dateTime, nextProps.format, true).isValid()) {
-      return this.setState({
-        viewDate: moment(nextProps.dateTime, nextProps.format, true).startOf("month"),
-        selectedDate: moment(nextProps.dateTime, nextProps.format, true),
-        inputValue: moment(nextProps.dateTime, nextProps.format, true).format(nextProps.inputFormat)
-      });
-    }
+    let state = {};
     if (nextProps.inputFormat !== this.props.inputFormat) {
-      return this.setState({
-        inputFormat: nextProps.inputFormat
-      });
+        state.inputFormat = nextProps.inputFormat;
+        state.inputValue = moment(nextProps.dateTime, nextProps.format, true).format(nextProps.inputFormat);
     }
+
+    if (nextProps.dateTime !== this.props.dateTime && moment(nextProps.dateTime, nextProps.format, true).isValid()) {
+      state.viewDate = moment(nextProps.dateTime, nextProps.format, true).startOf("month");
+      state.selectedDate = moment(nextProps.dateTime, nextProps.format, true);
+      state.inputValue = moment(nextProps.dateTime, nextProps.format, true).format(nextProps.inputFormat ? nextProps.inputFormat : this.state.inputFormat);
+    }
+    return this.setState(state);
   }
 
 
@@ -93,7 +99,7 @@ export default class DateTimeField extends Component {
     return this.setState({
       inputValue: value
     }, function() {
-      return this.props.onChange(moment(this.state.inputValue, this.state.inputFormat, true).format(this.props.format));
+      return this.props.onChange(moment(this.state.inputValue, this.state.inputFormat, true).format(this.props.format), value);
     });
 
   }
@@ -261,7 +267,7 @@ export default class DateTimeField extends Component {
       this.setState({
         showPicker: true
       });
-      gBCR = this.refs.dtpbutton.getDOMNode().getBoundingClientRect();
+      gBCR = this.refs.dtpbutton.getBoundingClientRect();
       classes = {
         "bootstrap-datetimepicker-widget": true,
         "dropdown-menu": true
@@ -270,11 +276,11 @@ export default class DateTimeField extends Component {
         top: gBCR.top + window.pageYOffset - document.documentElement.clientTop,
         left: gBCR.left + window.pageXOffset - document.documentElement.clientLeft
       };
-      offset.top = offset.top + this.refs.datetimepicker.getDOMNode().offsetHeight;
+      offset.top = offset.top + this.refs.datetimepicker.offsetHeight;
       scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-      placePosition = this.props.direction === "up" ? "top" : this.props.direction === "bottom" ? "bottom" : this.props.direction === "auto" ? offset.top + this.refs.widget.getDOMNode().offsetHeight > window.offsetHeight + scrollTop && this.refs.widget.offsetHeight + this.refs.datetimepicker.getDOMNode().offsetHeight > offset.top ? "top" : "bottom" : void 0;
+      placePosition = this.props.direction === "up" ? "top" : this.props.direction === "bottom" ? "bottom" : this.props.direction === "auto" ? offset.top + this.refs.widget.offsetHeight > window.offsetHeight + scrollTop && this.refs.widget.offsetHeight + this.refs.datetimepicker.offsetHeight > offset.top ? "top" : "bottom" : void 0;
       if (placePosition === "top") {
-        offset.top = -this.refs.widget.getDOMNode().offsetHeight - this.getDOMNode().clientHeight - 2;
+        offset.top = -this.refs.widget.offsetHeight - this.clientHeight - 2;
         classes.top = true;
         classes.bottom = false;
         classes["pull-right"] = true;
@@ -299,13 +305,24 @@ export default class DateTimeField extends Component {
   }
 
   closePicker = () => {
-    let style = this.state.widgetStyle;
+    let style = {...this.state.widgetStyle};
     style.left = -9999;
     style.display = "none";
     return this.setState({
       showPicker: false,
       widgetStyle: style
     });
+  }
+
+  size = () => {
+    switch (this.props.size) {
+      case Constants.SIZE_SMALL:
+        return "form-group-sm";
+      case Constants.SIZE_LARGE:
+        return "form-group-lg";
+    }
+
+    return "";
   }
 
   renderOverlay = () => {
@@ -318,7 +335,7 @@ export default class DateTimeField extends Component {
       zIndex: "999"
     };
     if (this.state.showPicker) {
-      return (<div style={styles} onClick={this.closePicker} />);
+      return (<div onClick={this.closePicker} style={styles} />);
     } else {
       return <span />;
     }
@@ -335,7 +352,7 @@ export default class DateTimeField extends Component {
     return (
           <div>
             {this.renderOverlay()}
-            <DateTimePicker ref="widget"
+            <DateTimePicker
                   addDecade={this.addDecade}
                   addHour={this.addHour}
                   addMinute={this.addMinute}
@@ -345,6 +362,7 @@ export default class DateTimeField extends Component {
                   maxDate={this.props.maxDate}
                   minDate={this.props.minDate}
                   mode={this.props.mode}
+                  ref="widget"
                   selectedDate={this.state.selectedDate}
                   setSelectedDate={this.setSelectedDate}
                   setSelectedHour={this.setSelectedHour}
@@ -353,6 +371,7 @@ export default class DateTimeField extends Component {
                   setViewYear={this.setViewYear}
                   showDatePicker={this.state.showDatePicker}
                   showTimePicker={this.state.showTimePicker}
+                  calendarIconSrc={this.props.calendarIconSrc}
                   showToday={this.props.showToday}
                   subtractDecade={this.subtractDecade}
                   subtractHour={this.subtractHour}
@@ -366,9 +385,11 @@ export default class DateTimeField extends Component {
                   widgetClasses={this.state.widgetClasses}
                   widgetStyle={this.state.widgetStyle}
             />
-            <div className="input-group date" ref="datetimepicker">
-              <input type="text" className="form-control" id={this.props.id} onChange={this.onChange} value={this.state.inputValue} {...this.props.inputProps}/>
-              <span className="input-group-addon" onClick={this.onClick} onBlur={this.onBlur} ref="dtpbutton">{icon}</span>
+            <div className={"input-group date " + this.size()} ref="datetimepicker">
+              <input className="form-control" onChange={this.onChange} type="text" value={this.state.inputValue} {...this.props.inputProps}/>
+              <span className="input-group-addon" onBlur={this.onBlur} onClick={this.onClick} ref="dtpbutton">
+                <span className={classnames("glyphicon", this.state.buttonIcon)} />
+              </span>
             </div>
           </div>
     );
