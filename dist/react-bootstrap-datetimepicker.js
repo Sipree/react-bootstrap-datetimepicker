@@ -412,8 +412,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    this.renderIcon = function () {
-	      if (_this.props.hasOwnProperty('calendarIconSrc') && _this.props.calendarIconSrc !== "") {
+	      if (_this.props.mode !== _ConstantsJs2["default"].MODE_TIME && _this.props.hasOwnProperty('calendarIconSrc') && _this.props.calendarIconSrc !== "") {
 	        return _react2["default"].createElement("img", { src: _this.props.calendarIconSrc });
+	      } else if (_this.props.mode === _ConstantsJs2["default"].MODE_TIME && _this.props.hasOwnProperty('timeIconSrc') && _this.props.timeIconSrc !== "") {
+	        return _react2["default"].createElement("img", { src: _this.props.timeIconSrc });
 	      } else {
 	        return _react2["default"].createElement("span", { className: (0, _classnames2["default"])("glyphicon", _this.state.buttonIcon) });
 	      }
@@ -448,6 +450,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          showDatePicker: this.state.showDatePicker,
 	          showTimePicker: this.state.showTimePicker,
 	          calendarIconSrc: this.props.calendarIconSrc,
+	          timeIconSrc: this.props.timeIconSrc,
 	          showToday: this.props.showToday,
 	          subtractDecade: this.subtractDecade,
 	          subtractHour: this.subtractHour,
@@ -482,6 +485,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      viewMode: "days",
 	      daysOfWeekDisabled: [],
 	      calendarIconSrc: "",
+	      timeIconSrc: "",
 	      size: _ConstantsJs2["default"].SIZE_MEDIUM,
 	      mode: _ConstantsJs2["default"].MODE_DATETIME,
 	      onChange: function onChange(x) {
@@ -1246,8 +1250,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    this.renderIcon = function () {
-	      if (_this.props.hasOwnProperty('calendarIconSrc') && _this.props.calendarIconSrc !== "") {
+	      if (_this.props.mode !== _ConstantsJs2["default"].MODE_TIME && _this.props.hasOwnProperty('calendarIconSrc') && _this.props.calendarIconSrc !== "") {
 	        return _react2["default"].createElement("img", { src: _this.props.calendarIconSrc });
+	      } else if (_this.props.mode === _ConstantsJs2["default"].MODE_TIME && _this.props.hasOwnProperty('timeIconSrc') && _this.props.timeIconSrc !== "") {
+	        return _react2["default"].createElement("img", { src: _this.props.timeIconSrc });
 	      } else {
 	        return _react2["default"].createElement("span", { className: (0, _classnames2["default"])("glyphicon", _this.props.showTimePicker ? "glyphicon-calendar" : "glyphicon-time") });
 	      }
@@ -1287,6 +1293,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      showDatePicker: _react.PropTypes.bool,
 	      showTimePicker: _react.PropTypes.bool,
 	      calendarIconSrc: _react.PropTypes.string,
+	      timeIconSrc: _react.PropTypes.string,
 	      subtractMonth: _react.PropTypes.func.isRequired,
 	      addMonth: _react.PropTypes.func.isRequired,
 	      viewDate: _react.PropTypes.object.isRequired,

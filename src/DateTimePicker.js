@@ -9,6 +9,7 @@ export default class DateTimePicker extends Component {
     showDatePicker: PropTypes.bool,
     showTimePicker: PropTypes.bool,
     calendarIconSrc: PropTypes.string,
+    timeIconSrc: PropTypes.string,
     subtractMonth: PropTypes.func.isRequired,
     addMonth: PropTypes.func.isRequired,
     viewDate: PropTypes.object.isRequired,
@@ -90,9 +91,11 @@ export default class DateTimePicker extends Component {
   }
 
   renderIcon = () => {
-      if(this.props.hasOwnProperty('calendarIconSrc') && this.props.calendarIconSrc !== "") {
-        return (<img src={this.props.calendarIconSrc}/>);
-      } else {
+    if(this.props.mode !== Constants.MODE_TIME && this.props.hasOwnProperty('calendarIconSrc') && this.props.calendarIconSrc !== "") {
+      return (<img src={this.props.calendarIconSrc}/>);
+    } else if(this.props.mode === Constants.MODE_TIME && this.props.hasOwnProperty('timeIconSrc') && this.props.timeIconSrc !== "") {
+      return (<img src={this.props.timeIconSrc}/>);
+    } else {
         return (<span className={classnames("glyphicon", this.props.showTimePicker ? "glyphicon-calendar" : "glyphicon-time")} />)
       }
   }

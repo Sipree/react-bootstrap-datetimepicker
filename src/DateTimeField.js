@@ -12,6 +12,7 @@ export default class DateTimeField extends Component {
     viewMode: "days",
     daysOfWeekDisabled: [],
     calendarIconSrc: "",
+    timeIconSrc: "",
     size: Constants.SIZE_MEDIUM,
     mode: Constants.MODE_DATETIME,
     onChange: (x) => {
@@ -342,8 +343,10 @@ export default class DateTimeField extends Component {
   }
 
   renderIcon = () => {
-    if(this.props.hasOwnProperty('calendarIconSrc') && this.props.calendarIconSrc !== "") {
+    if(this.props.mode !== Constants.MODE_TIME && this.props.hasOwnProperty('calendarIconSrc') && this.props.calendarIconSrc !== "") {
       return (<img src={this.props.calendarIconSrc}/>);
+    } else if(this.props.mode === Constants.MODE_TIME && this.props.hasOwnProperty('timeIconSrc') && this.props.timeIconSrc !== "") {
+      return (<img src={this.props.timeIconSrc}/>);
     } else {
       return (<span className={classnames("glyphicon", this.state.buttonIcon)}/>);
     }
@@ -375,6 +378,7 @@ export default class DateTimeField extends Component {
                   showDatePicker={this.state.showDatePicker}
                   showTimePicker={this.state.showTimePicker}
                   calendarIconSrc={this.props.calendarIconSrc}
+                  timeIconSrc={this.props.timeIconSrc}
                   showToday={this.props.showToday}
                   subtractDecade={this.subtractDecade}
                   subtractHour={this.subtractHour}
