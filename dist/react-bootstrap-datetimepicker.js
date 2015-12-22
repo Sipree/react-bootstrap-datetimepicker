@@ -1250,9 +1250,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    this.renderIcon = function () {
-	      if (_this.props.mode !== _ConstantsJs2["default"].MODE_TIME && _this.props.hasOwnProperty('calendarIconSrc') && _this.props.calendarIconSrc !== "") {
+	      if (_this.props.showTimePicker && _this.props.hasOwnProperty('calendarIconSrc') && _this.props.calendarIconSrc !== "") {
 	        return _react2["default"].createElement("img", { src: _this.props.calendarIconSrc });
-	      } else if (_this.props.mode === _ConstantsJs2["default"].MODE_TIME && _this.props.hasOwnProperty('timeIconSrc') && _this.props.timeIconSrc !== "") {
+	      } else if (!_this.props.showTimePicker && _this.props.hasOwnProperty('timeIconSrc') && _this.props.timeIconSrc !== "") {
 	        return _react2["default"].createElement("img", { src: _this.props.timeIconSrc });
 	      } else {
 	        return _react2["default"].createElement("span", { className: (0, _classnames2["default"])("glyphicon", _this.props.showTimePicker ? "glyphicon-calendar" : "glyphicon-time") });
